@@ -4,6 +4,7 @@ import TopNav from "./TopNavBar";
 import Footer from "./Footer";
 import ProfileSettingsCard from "./ProfileSettingsCard";
 import ButtonContainer from "./ButtonContainer";
+import ScrollbarWrapper from "./ScrollbarWrapper";
 
 export default function Layout() {
     return (
@@ -42,7 +43,7 @@ export default function Layout() {
                     maxHeight: "100%",
                     width: "320px",
                     minWidth: "280px",
-                    overflowY: "auto", // allow scrolling
+                    overflowY: "hidden", 
                     marginRight: "5px",
                     top: "65px",
                     right: 0,
@@ -51,14 +52,27 @@ export default function Layout() {
                     background: "rgba(0, 0, 0, 0.5)",
                     borderRadius: "8px",
                     padding: "10px",
-
-                    /* Hide scrollbar */
-                    scrollbarWidth: "none", // Firefox
-                    msOverflowStyle: "none", // IE 10+
                 }}
                 className="right-column"
             >
-                <ProfileSettingsCard />
+                <ScrollbarWrapper
+                    thumbColor="#00ff99"
+                    trackColor="rgba(0, 0, 0, 0.3)"
+                    thumbHoverColor="#33ffcc"
+                    width="10px"
+                    style={{
+                        position: "absolute",
+                        right: 0,
+                        height: "calc(100vh - 40px)",
+                        width: "100%",
+                        overflowY: "auto",
+                    }}
+                >
+                    <div style={{ paddingBottom: "100px" }}>
+                        <ProfileSettingsCard />
+                    </div>
+                </ScrollbarWrapper>
+
             </aside>
 
 
