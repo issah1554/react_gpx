@@ -3,6 +3,7 @@ import TopNav from "./TopNavBar";
 // import RightColumn from "./RightColumn";
 import Footer from "./Footer";
 import ProfileSettingsCard from "./ProfileSettingsCard";
+import ButtonContainer from "./ButtonContainer";
 
 export default function Layout() {
     return (
@@ -20,7 +21,7 @@ export default function Layout() {
                     marginLeft: "5px",
                     marginRight: "5px",
                     top: "65px", // space for fixed nav
-                    height: "calc(100vh - 103px)",
+                    height: "calc(100vh - 116px)",
                     width: " calc(100vw - 335px)", // account for right card
                     background: "rgba(0, 0, 0, 0.5)",
                     borderRadius: "8px",
@@ -45,7 +46,7 @@ export default function Layout() {
                     marginRight: "5px",
                     top: "65px",
                     right: 0,
-                    height: "calc(100vh - 103px)",
+                    height: "calc(100vh - 116px)",
                     display: "block", // hidden by default
                     background: "rgba(0, 0, 0, 0.5)",
                     borderRadius: "8px",
@@ -59,7 +60,7 @@ export default function Layout() {
             </aside>
 
             <Footer />
-
+            <ButtonContainer/>
             {/* CSS Media Query */}
             <style>
                 {`
