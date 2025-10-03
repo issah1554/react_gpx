@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import Avatar from "../ui/Avatar";
 
 export default function TopNav() {
     const [showNotifications, setShowNotifications] = useState(false);
@@ -93,13 +94,14 @@ export default function TopNav() {
                 color: "#fff",
             }}
         >
+
             <h2
                 style={{
                     margin: 0,
                     fontSize: "1rem",
                     display: "flex",
                     alignItems: "center",
-                    gap: "8px",
+                    padding: "8px",
                     color: "white",
                     fontWeight: "700",
                 }}
@@ -144,13 +146,13 @@ export default function TopNav() {
 
                 {/* Profile Dropdown */}
                 <div ref={profileRef} style={{ position: "relative" }}>
-                    <button
-                        style={buttonStyle}
+                    <Avatar
+                        size={38}
+                        src="https://i.pravatar.cc/300"
+                        alt="Issah Ben"
                         onClick={toggleProfileMenu}
-                        title="Profile"
-                    >
-                        <i className={`bi bi-person-circle`}></i>
-                    </button>
+                        style={{cursor:'pointer'}}
+                    />
                     {showProfileMenu && (
                         <div style={dropdownStyle}>
                             <div style={dropdownItemStyle}>
