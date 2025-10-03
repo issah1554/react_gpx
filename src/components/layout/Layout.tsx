@@ -9,79 +9,78 @@ export default function Layout() {
         <>
             <BackgroundMap />
 
-            <div
+            <TopNav />
+
+            {/* MAIN CONTENT AREA */}
+            <main
                 style={{
-                    position: "relative",
-                    height: "100vh",
-                    display: "flex",
-                    flexDirection: "column",
-                    overflow: "hidden",
+                    flex: 1,
+                    position: "absolute",
+                    overflow: "auto",
+                    paddingLeft: "5px",
+                    marginTop: "65px", // space for fixed nav
+                    height: "calc(100vh - 103px)",
+                    width: " calc(100vw - 327px)", // account for right card
                 }}
+                className="me-1"
             >
-                <TopNav />
                 <div
                     style={{
-                        flex: 1,
-                        display: "flex",
-                        flexDirection: "row",
-                        marginTop: "60px", // space for fixed nav
-                        marginBottom: "33px", // space for footer
-                        overflow: "hidden",
+                        background: "rgba(0, 0, 0, 0.5)",
+                        borderRadius: "8px",
+                        height: "100%",
                     }}
+                    className="p-3"
+                
                 >
-                    {/* MAIN CONTENT AREA */}
-                    <main
-                        style={{
-                            flex: 1,
-                            position: "relative",
-                            overflow: "auto",
-                            padding: "20px",
-                        }}
-                    >
-                        <h1 style={{ color: "white" }}>Main Content Area</h1>
-                        <p style={{ color: "white" }}>
-                            This is your central workspace.
-                        </p>
-                    </main>
-
-                    {/* RIGHT CARD (Responsive) */}
-                    <aside
-                        style={{
-                            width: "320px",
-                            minWidth: "280px",
-                            overflowY: "auto",
-                            paddingRight: "5px",
-                            display: "block", // hidden by default
-                        }}
-                        className="right-column py-2"
-                    >
-                        <div
-                            style={{
-                                background: "rgba(0, 0, 0, 0.5)",
-                                borderRadius: "8px",
-                                padding: "10px",
-                                height: "100%",
-                            }}>
-                            <ProfileSettingsCard />
-
-                        </div>
-                    </aside>
+                    <h1 style={{ color: "white" }}>Main Content Area</h1>
+                    <p style={{ color: "white" }}>
+                        This is your central workspace.
+                    </p>
                 </div>
+            </main>
 
-                {/* Footer */}
-                <Footer />
+            {/* RIGHT CARD (Responsive) */}
+            <aside
+                style={{
+                    position: "absolute",
+                    maxHeight: "100%",
+                    width: "320px",
+                    minWidth: "280px",
+                    overflowY: "auto",
+                    paddingRight: "5px",
+                    marginTop: "65px",
+                    right: 0,
+                    height: "calc(100vh - 103px)",
+                    display: "block", // hidden by default
 
-                {/* CSS Media Query */}
-                <style>
-                    {`
+                }}
+                className="right-column"
+            >
+                <div
+                    style={{
+                        background: "rgba(0, 0, 0, 0.5)",
+                        borderRadius: "8px",
+                        height: "100%",
+                    }}>
+                    <ProfileSettingsCard />
+
+                </div>
+            </aside>
+
+            {/* Footer */}
+            <Footer />
+
+            {/* CSS Media Query */}
+            <style>
+                {`
                         @media (min-width: 768px) {
                             .right-column {
                                 display: block; /* visible on tablets & larger */
                             }
                         }
                     `}
-                </style>
-            </div>
+            </style>
         </>
     );
 }

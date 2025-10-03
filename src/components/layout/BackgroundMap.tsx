@@ -23,7 +23,7 @@ interface BackgroundMapProps {
 export default function BackgroundMap({
     mapLayer = "satellite",
     isMapLabels = false,
-    draggable = false,
+    draggable = true,
     scrollWheelZoom = false,
     doubleClickZoom = false,
     boxZoom = false,
