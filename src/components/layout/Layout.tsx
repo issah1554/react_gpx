@@ -2,6 +2,7 @@ import BackgroundMap from "./BackgroundMap";
 import TopNav from "./TopNavBar";
 // import RightColumn from "./RightColumn";
 import Footer from "./Footer";
+import ProfileSettingsCard from "./ProfileSettingsCard";
 
 export default function Layout() {
     return (
@@ -48,18 +49,22 @@ export default function Layout() {
                         style={{
                             width: "320px",
                             minWidth: "280px",
-                            background: "rgba(0,0,0,0.5)",
-                            backdropFilter: "blur(6px)",
                             overflowY: "auto",
-                            padding: "15px",
+                            paddingRight: "5px",
                             display: "block", // hidden by default
                         }}
-                        className="right-column"
+                        className="right-column py-2"
                     >
-                            <h3 style={{ color: "white" }}>Right Sidebar</h3>
-                            <p style={{ color: "white" }}>
-                                This area is responsive (widgets, chat, etc.).
-                            </p>
+                        <div
+                            style={{
+                                background: "rgba(0, 0, 0, 0.5)",
+                                borderRadius: "8px",
+                                padding: "10px",
+                                height: "100%",
+                            }}>
+                            <ProfileSettingsCard />
+
+                        </div>
                     </aside>
                 </div>
 

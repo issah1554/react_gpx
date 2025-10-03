@@ -1,35 +1,40 @@
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import Avatar from "../ui/Avatar";
+// import NavButton from "../ui/NavButton";
+import Dropdown, { DropdownItem } from "../ui/Dropdown";
+import { useUI } from "../../context/UIContext";
 
 export default function TopNav() {
-    const [showNotifications, setShowNotifications] = useState(false);
-    const [showProfileMenu, setShowProfileMenu] = useState(false);
     const notifRef = useRef<HTMLDivElement>(null);
     const profileRef = useRef<HTMLDivElement>(null);
 
-    const toggleNotifications = () => {
-        setShowNotifications(!showNotifications);
-        setShowProfileMenu(false);
-    };
+    const {
+        // showNotifications,
+        setShowNotifications,
+        showProfile,
+        setShowProfile,
+        setShowSettings,
+        // addNotification,
+        logout,
+    } = useUI();
+
+    // const toggleNotifications = () => {
+    //     setShowNotifications(!showNotifications);
+    //     setShowProfile(false);
+    // };
 
     const toggleProfileMenu = () => {
-        setShowProfileMenu(!showProfileMenu);
+        setShowProfile(!showProfile);
         setShowNotifications(false);
     };
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (
-                notifRef.current &&
-                !notifRef.current.contains(event.target as Node)
-            ) {
+            if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
                 setShowNotifications(false);
             }
-            if (
-                profileRef.current &&
-                !profileRef.current.contains(event.target as Node)
-            ) {
-                setShowProfileMenu(false);
+            if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+                setShowProfile(false);
             }
         };
 
@@ -38,43 +43,7 @@ export default function TopNav() {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, []);
-
-    const buttonStyle: React.CSSProperties = {
-        display: "flex",
-        alignItems: "center",
-        gap: "5px",
-        padding: "8px 12px",
-        background: "rgba(255, 255, 255, 0.1)",
-        border: "none",
-        borderRadius: "8px",
-        color: "#fff",
-        cursor: "pointer",
-        transition: "background 0.3s ease, transform 0.2s ease",
-        position: "relative",
-    };
-
-    const dropdownStyle: React.CSSProperties = {
-        position: "absolute",
-        top: "100%",
-        right: 0,
-        background: "rgba(0, 0, 0, 0.8)",
-        borderRadius: "8px",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-        padding: "10px",
-        minWidth: "220px",
-        zIndex: 30,
-    };
-
-    const dropdownItemStyle: React.CSSProperties = {
-        display: "flex",
-        alignItems: "center",
-        gap: "8px",
-        padding: "5px 10px",
-        cursor: "pointer",
-        color: "#fff",
-        fontSize: "0.95rem",
-    };
+    }, [setShowNotifications, setShowProfile]);
 
     return (
         <nav
@@ -86,15 +55,14 @@ export default function TopNav() {
                 height: "60px",
                 display: "flex",
                 alignItems: "center",
-                padding: "0 20px",
-                background: "rgba(0, 0, 0, 0.4)",
-                backdropFilter: "blur(5px)",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+                padding: "0 30px",
+                background: "rgba(0, 0, 0, 0.5)",
+                // backdropFilter: "blur(5px)",
+                // boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
                 zIndex: 20,
                 color: "#fff",
             }}
         >
-
             <h2
                 style={{
                     margin: 0,
@@ -117,58 +85,50 @@ export default function TopNav() {
                     gap: "15px",
                 }}
             >
-                {/* Notifications Dropdown */}
-                <div ref={notifRef} style={{ position: "relative" }}>
-                    <button
-                        style={buttonStyle}
-                        onClick={toggleNotifications}
-                        title="Notifications"
-                    >
-                        <i className={`bi bi-bell`}></i>
-                    </button>
+                {/* Notifications */}
+                {/* <div ref={notifRef} style={{ position: "relative" }}>
+                    <NavButton onClick={toggleNotifications} title="Notifications">
+                        <i className="bi bi-bell"></i>
+                    </NavButton>
                     {showNotifications && (
-                        <div style={dropdownStyle}>
-                            <div style={dropdownItemStyle}>
+                        <Dropdown >
+                            <DropdownItem onClick={() => addNotification("Clicked: New message")}>
                                 <i className="bi bi-envelope"></i>
                                 New message from John
-                            </div>
-                            <div style={dropdownItemStyle}>
+                            </DropdownItem>
+                            <DropdownItem onClick={() => addNotification("Clicked: Backup")}>
                                 <i className="bi bi-check-circle"></i>
                                 Server backup completed
-                            </div>
-                            <div style={dropdownItemStyle}>
+                            </DropdownItem>
+                            <DropdownItem onClick={() => addNotification("Clicked: Meeting")}>
                                 <i className="bi bi-calendar-event"></i>
                                 Meeting at 3 PM
-                            </div>
-                        </div>
+                            </DropdownItem>
+                        </Dropdown>
                     )}
-                </div>
+                </div> */}
 
-                {/* Profile Dropdown */}
+                {/* Profile */}
                 <div ref={profileRef} style={{ position: "relative" }}>
                     <Avatar
                         size={38}
                         src="https://i.pravatar.cc/300"
                         alt="Issah Ben"
                         onClick={toggleProfileMenu}
-                        style={{cursor:'pointer'}}
+                        style={{ cursor: "pointer" }}
                     />
-                    {showProfileMenu && (
-                        <div style={dropdownStyle}>
-                            <div style={dropdownItemStyle}>
-                                <i className="bi bi-person"></i>
-                                John Doe
-                            </div>
-                            <hr style={{ borderColor: "#444" }} />
-                            <div style={dropdownItemStyle}>
-                                <i className="bi bi-gear"></i>
-                                Profile and Settings
-                            </div>
-                            <div style={dropdownItemStyle}>
-                                <i className="bi bi-box-arrow-right"></i>
-                                Logout
-                            </div>
-                        </div>
+                    {showProfile && (
+                        <Dropdown>
+                            <DropdownItem>
+                                <i className="bi bi-person"></i> Profile
+                            </DropdownItem>
+                            <DropdownItem onClick={() => setShowSettings(true)}>
+                                <i className="bi bi-gear"></i> Settings
+                            </DropdownItem>
+                            <DropdownItem onClick={logout}>
+                                <i className="bi bi-box-arrow-right"></i> Logout
+                            </DropdownItem>
+                        </Dropdown>
                     )}
                 </div>
             </div>
