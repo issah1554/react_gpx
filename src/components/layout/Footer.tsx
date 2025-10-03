@@ -31,7 +31,7 @@ export default function Footer() {
         boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
         justifyContent: isSmallScreen ? "center" : "flex-start",
         transition: "all 0.3s ease",
-        minWidth: "320px",
+        minWidth: "325px",
     };
 
     return (
