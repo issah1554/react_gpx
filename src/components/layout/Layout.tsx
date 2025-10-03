@@ -1,6 +1,6 @@
 import BackgroundMap from "./BackgroundMap";
 import TopNav from "./TopNavBar";
-import RightColumn from "./RightColumn";
+// import RightColumn from "./RightColumn";
 import Footer from "./Footer";
 
 export default function Layout() {
