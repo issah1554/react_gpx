@@ -42,22 +42,26 @@ export default function Layout() {
                     maxHeight: "100%",
                     width: "320px",
                     minWidth: "280px",
-                    overflowY: "hidden",
+                    overflowY: "auto", // allow scrolling
                     marginRight: "5px",
                     top: "65px",
                     right: 0,
                     height: "calc(100vh - 116px)",
-                    display: "block", // hidden by default
+                    display: "block",
                     background: "rgba(0, 0, 0, 0.5)",
                     borderRadius: "8px",
-                    padding: "10px"
+                    padding: "10px",
 
-
+                    /* Hide scrollbar */
+                    scrollbarWidth: "none", // Firefox
+                    msOverflowStyle: "none", // IE 10+
                 }}
                 className="right-column"
             >
                 <ProfileSettingsCard />
             </aside>
+
+
 
             <Footer />
             <ButtonContainer/>
