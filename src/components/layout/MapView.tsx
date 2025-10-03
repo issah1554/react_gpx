@@ -1,18 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import "leaflet.locatecontrol/dist/L.Control.Locate.min.css";
 import "leaflet.locatecontrol";
 import * as turf from "@turf/turf";
 import Swal from "sweetalert2";
 import "leaflet-easyprint";
-import "leaflet.locatecontrol/dist/L.Control.Locate.min.css";
-
-
-// Extend Leaflet control namespace for locate control
-declare module "leaflet" {
-    namespace control {
-        function locate(options?: any): Control;
-    }
-}
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 export default function MapView() {
     const mapRef = useRef<L.Map | null>(null);
@@ -21,6 +15,8 @@ export default function MapView() {
     const [currentLatLng, setCurrentLatLng] = useState<L.LatLng | null>(null);
 
     useEffect(() => {
+        if (mapRef.current) return;
+
         const map = L.map("map", { zoomControl: false }).setView([-6.509, 38.08], 20);
         mapRef.current = map;
 
@@ -29,10 +25,13 @@ export default function MapView() {
             maxZoom: 19,
         }).addTo(map);
 
-        const satelliteLayer = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
-            attribution: "Tiles &copy; Esri",
-            maxZoom: 19,
-        });
+        const satelliteLayer = L.tileLayer(
+            "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+            {
+                attribution: "Tiles &copy; Esri",
+                maxZoom: 19,
+            }
+        );
 
         const baseLayers = {
             "Street Map": osmLayer,
@@ -40,13 +39,14 @@ export default function MapView() {
         };
         L.control.layers(baseLayers).addTo(map);
 
-        L.control.locate({
-            position: "topright",
-            drawCircle: true,
-            follow: false,
-            setView: true,
-            keepCurrentZoomLevel: true,
-        }).addTo(map);
+        // ✅ LocateControl works now
+        // L.control.locate({
+        //     position: "topright",
+        //     drawCircle: true,
+        //     follow: false,
+        //     setView: true,
+        //     keepCurrentZoomLevel: true,
+        // }).addTo(map);
 
         L.control.zoom({ position: "topright" }).addTo(map);
 
@@ -62,6 +62,7 @@ export default function MapView() {
 
         return () => {
             map.remove();
+            mapRef.current = null;
         };
     }, []);
 
@@ -110,7 +111,7 @@ export default function MapView() {
         setPolygon(poly);
 
         const coords = latlngs.map(ll => [ll.lng, ll.lat]);
-        coords.push(coords[0]); // Close the polygon
+        coords.push(coords[0]);
 
         const area = turf.area(turf.polygon([coords]));
         console.log(`Area: ${area.toFixed(2)} m²`);
