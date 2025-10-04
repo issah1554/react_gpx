@@ -19,7 +19,6 @@ interface BackgroundMapProps {
     doubleClickZoom?: boolean;
     boxZoom?: boolean;
     keyboard?: boolean;
-    brightness?: number; // 👈 new prop (default = 1)
 }
 
 export default function BackgroundMap({
@@ -38,17 +37,18 @@ export default function BackgroundMap({
         if (mapRef.current) return;
 
         const map = L.map("background-map", {
-            zoomControl: false,
+            zoomControl: false, // disable default so we can place custom
             attributionControl: false,
             dragging: draggable,
-            scrollWheelZoom: scrollWheelZoom,
-            doubleClickZoom: doubleClickZoom,
-            boxZoom: boxZoom,
-            keyboard: keyboard,
+            scrollWheelZoom,
+            doubleClickZoom,
+            boxZoom,
+            keyboard,
         }).setView([-6.82706969735409, 39.274663859227026], 14);
 
         mapRef.current = map;
 
+        // --- Layers ---
         const layers: Record<MapLayer, L.TileLayer | null> = {
             satellite: L.tileLayer(
                 "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
@@ -76,6 +76,23 @@ export default function BackgroundMap({
         if (layers[mapLayer]) layers[mapLayer]?.addTo(map);
         if (isMapLabels && layers.labels) layers.labels.addTo(map);
 
+        // --- Controls ---
+        L.control.zoom({ position: "bottomright" }).addTo(map); // zoom buttons
+        L.control.scale({ position: "bottomleft" }).addTo(map); // scale bar
+
+        // Base and overlays
+        const baseMaps = {
+            Satellite: layers.satellite!,
+            Streets: layers.streets!,
+            Terrain: layers.terrain!,
+            Topo: layers.topo!,
+        };
+        const overlayMaps = {
+            Labels: layers.labels!,
+        };
+
+        L.control.layers(baseMaps, overlayMaps, { position: "topright" }).addTo(map);
+
         return () => {
             map.remove();
             mapRef.current = null;
@@ -100,7 +117,7 @@ export default function BackgroundMap({
                 height: "100vh",
                 width: "100vw",
                 zIndex: 0,
-                filter: `brightness(${brightness})`, // 👈 dynamic brightness
+                filter: `brightness(${brightness})`, // dynamic brightness
             }}
         />
     );

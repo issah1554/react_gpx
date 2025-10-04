@@ -1,5 +1,5 @@
 import React, { type CSSProperties } from "react";
-import styles from "./scrollbar.module.css";
+import styles from "./assets/scrollbar.module.css";
 
 interface ScrollbarWrapperProps {
     children: React.ReactNode;
