@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { useUI } from "../../context/UIContext";
 
 type MapLayer =
     | "satellite"
@@ -18,6 +19,7 @@ interface BackgroundMapProps {
     doubleClickZoom?: boolean;
     boxZoom?: boolean;
     keyboard?: boolean;
+    brightness?: number; // 👈 new prop (default = 1)
 }
 
 export default function BackgroundMap({
@@ -30,6 +32,7 @@ export default function BackgroundMap({
     keyboard = false,
 }: BackgroundMapProps) {
     const mapRef = useRef<L.Map | null>(null);
+    const { brightness } = useUI();
 
     useEffect(() => {
         if (mapRef.current) return;
@@ -97,7 +100,7 @@ export default function BackgroundMap({
                 height: "100vh",
                 width: "100vw",
                 zIndex: 0,
-                filter: "brightness(1)",
+                filter: `brightness(${brightness})`, // 👈 dynamic brightness
             }}
         />
     );

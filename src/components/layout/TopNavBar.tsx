@@ -4,6 +4,7 @@ import Avatar from "../ui/Avatar";
 import Dropdown, { DropdownItem } from "../ui/Dropdown";
 import { useUI } from "../../context/UIContext";
 
+
 export default function TopNav() {
     const notifRef = useRef<HTMLDivElement>(null);
     const profileRef = useRef<HTMLDivElement>(null);
@@ -16,6 +17,8 @@ export default function TopNav() {
         setShowSettings,
         // addNotification,
         logout,
+        transparency, // 👈 grab from context
+
     } = useUI();
 
     // const toggleNotifications = () => {
@@ -56,7 +59,7 @@ export default function TopNav() {
                 display: "flex",
                 alignItems: "center",
                 padding: "0 30px",
-                background: "rgba(0, 0, 0, 0.5)",
+                background: `rgba(0,0,0,${transparency})`, // 👈 dynamic
                 // backdropFilter: "blur(5px)",
                 // boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
                 zIndex: 20,

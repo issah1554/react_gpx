@@ -1,17 +1,22 @@
+import { useUI } from "../../context/UIContext";
 import BackgroundMap from "./BackgroundMap";
 import TopNav from "./TopNavBar";
-// import RightColumn from "./RightColumn";
 import Footer from "./Footer";
 import ProfileSettingsCard from "./ProfileSettingsCard";
 import ButtonContainer from "./ButtonContainer";
 import ScrollbarWrapper from "./ScrollbarWrapper";
 
 export default function Layout() {
+    const { transparency } = useUI(); // 👈 read global transparency
+
     return (
         <>
             <BackgroundMap />
 
-            <TopNav />
+            {/* TOP NAV */}
+            <TopNav
+
+            />
 
             {/* MAIN CONTENT AREA */}
             <main
@@ -21,35 +26,34 @@ export default function Layout() {
                     overflow: "auto",
                     marginLeft: "5px",
                     marginRight: "5px",
-                    top: "65px", // space for fixed nav
+                    top: "65px",
                     height: "calc(100vh - 116px)",
-                    width: " calc(100vw - 335px)", // account for right card
-                    background: "rgba(0, 0, 0, 0.5)",
+                    width: "calc(100vw - 335px)",
+                    background: `rgba(0,0,0,${transparency})`, // 👈 apply here too
                     borderRadius: "8px",
-                    padding:"10px"
+                    padding: "10px",
                 }}
             >
-
-                    <h1 style={{ color: "white" }}>Main Content Area</h1>
-                    <p style={{ color: "white" }}>
-                        This is your central workspace.
-                    </p>
+                <h1 style={{ color: "white" }}>Main Content Area</h1>
+                <p style={{ color: "white" }}>
+                    This is your central workspace.
+                </p>
             </main>
 
-            {/* RIGHT CARD (Responsive) */}
+            {/* RIGHT CARD */}
             <aside
                 style={{
                     position: "absolute",
                     maxHeight: "100%",
                     width: "320px",
                     minWidth: "280px",
-                    overflowY: "hidden", 
+                    overflowY: "hidden",
                     marginRight: "5px",
                     top: "65px",
                     right: 0,
                     height: "calc(100vh - 116px)",
                     display: "block",
-                    background: "rgba(0, 0, 0, 0.5)",
+                    background: `rgba(0,0,0,${transparency})`, // 👈 same setting
                     borderRadius: "8px",
                     padding: "10px",
                 }}
@@ -72,22 +76,24 @@ export default function Layout() {
                         <ProfileSettingsCard />
                     </div>
                 </ScrollbarWrapper>
-
             </aside>
 
+            {/* FOOTER */}
+            <Footer
 
+            />
 
-            <Footer />
-            <ButtonContainer/>
+            <ButtonContainer />
+
             {/* CSS Media Query */}
             <style>
                 {`
-                        @media (min-width: 768px) {
-                            .right-column {
-                                display: block; /* visible on tablets & larger */
-                            }
+                    @media (min-width: 768px) {
+                        .right-column {
+                            display: block;
                         }
-                    `}
+                    }
+                `}
             </style>
         </>
     );

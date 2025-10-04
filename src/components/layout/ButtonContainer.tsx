@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { useUI } from "../../context/UIContext";
 
 export default function ButtonContainer() {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const { transparency } = useUI(); // 👈 read global transparency
 
     useEffect(() => {
         const handleResize = () => setWindowWidth(window.innerWidth);
@@ -17,7 +19,7 @@ export default function ButtonContainer() {
         left: isSmallScreen ? "0" : "5px", // Always left aligned
         width: isSmallScreen ? "100%" : "auto",
         padding: "8px 12px",
-        background: "rgba(0, 0, 0, 0.4)",
+        background: `rgba(0,0,0,${transparency})`, // 👈 dynamic
         backdropFilter: "blur(8px)",
         borderRadius: '5px',
         color: "#fff",
