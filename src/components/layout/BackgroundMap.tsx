@@ -1,15 +1,7 @@
 import { useEffect, useRef } from "react";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
 import { useUI } from "../../context/UIContext";
 
-type MapLayer =
-    | "satellite"
-    | "streets"
-    | "terrain"
-    | "topo"
-    | "labels"
-    | "none";
+type MapLayer = "satellite" | "streets"  | "labels" | "none";
 
 interface BackgroundMapProps {
     mapLayer?: MapLayer;
@@ -30,72 +22,109 @@ export default function BackgroundMap({
     boxZoom = false,
     keyboard = false,
 }: BackgroundMapProps) {
-    const mapRef = useRef<L.Map | null>(null);
+    const mapRef = useRef<any>(null);
     const { brightness } = useUI();
 
     useEffect(() => {
         if (mapRef.current) return;
 
-        const map = L.map("background-map", {
-            zoomControl: false, // disable default so we can place custom
-            attributionControl: false,
-            dragging: draggable,
-            scrollWheelZoom,
-            doubleClickZoom,
-            boxZoom,
-            keyboard,
-        }).setView([-6.82706969735409, 39.274663859227026], 14);
+        const loadCDNResources = () => {
+            return new Promise<void>((resolve) => {
+                // Leaflet CSS
+                const leafletCSS = document.createElement("link");
+                leafletCSS.rel = "stylesheet";
+                leafletCSS.href =
+                    "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+                document.head.appendChild(leafletCSS);
 
-        mapRef.current = map;
+                // LocateControl CSS
+                const locateCSS = document.createElement("link");
+                locateCSS.rel = "stylesheet";
+                locateCSS.href =
+                    "https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.78.0/dist/L.Control.Locate.min.css";
+                document.head.appendChild(locateCSS);
 
-        // --- Layers ---
-        const layers: Record<MapLayer, L.TileLayer | null> = {
-            satellite: L.tileLayer(
-                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-                { maxZoom: 19 }
-            ),
-            streets: L.tileLayer(
-                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                { maxZoom: 19, attribution: "&copy; OpenStreetMap contributors" }
-            ),
-            terrain: L.tileLayer(
-                "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
-                { maxZoom: 17, attribution: "&copy; OpenStreetMap contributors" }
-            ),
-            topo: L.tileLayer(
-                "https://{s}.tile.stamen.com/terrain/{z}/{x}/{y}.jpg",
-                { maxZoom: 18, attribution: "&copy; OpenStreetMap contributors" }
-            ),
-            labels: L.tileLayer(
-                "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
-                { maxZoom: 19 }
-            ),
-            none: null,
+                // Leaflet JS
+                const leafletJS = document.createElement("script");
+                leafletJS.src =
+                    "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+                leafletJS.onload = () => {
+                    // LocateControl JS
+                    const locateJS = document.createElement("script");
+                    locateJS.src =
+                        "https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.78.0/dist/L.Control.Locate.min.js";
+                    locateJS.onload = () => resolve();
+                    document.body.appendChild(locateJS);
+                };
+                document.body.appendChild(leafletJS);
+            });
         };
 
-        if (layers[mapLayer]) layers[mapLayer]?.addTo(map);
-        if (isMapLabels && layers.labels) layers.labels.addTo(map);
+        loadCDNResources().then(() => {
+            const L = (window as any).L;
 
-        // --- Controls ---
-        L.control.zoom({ position: "bottomright" }).addTo(map); // zoom buttons
-        L.control.scale({ position: "bottomleft" }).addTo(map); // scale bar
+            const map = L.map("background-map", {
+                zoomControl: false,
+                attributionControl: false,
+                dragging: draggable,
+                scrollWheelZoom,
+                doubleClickZoom,
+                boxZoom,
+                keyboard,
+            }).setView([-6.82707, 39.27466], 14);
 
-        // Base and overlays
-        const baseMaps = {
-            Satellite: layers.satellite!,
-            Streets: layers.streets!,
-            Terrain: layers.terrain!,
-            Topo: layers.topo!,
-        };
-        const overlayMaps = {
-            Labels: layers.labels!,
-        };
+            mapRef.current = map;
 
-        L.control.layers(baseMaps, overlayMaps, { position: "topright" }).addTo(map);
+            const layers: Record<MapLayer, any> = {
+                satellite: L.tileLayer(
+                    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+                    { maxZoom: 19 }
+                ),
+                streets: L.tileLayer(
+                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                    { maxZoom: 19, attribution: "&copy; OpenStreetMap contributors" }
+                ),
+                labels: L.tileLayer(
+                    "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
+                    { maxZoom: 19 }
+                ),
+                none: null,
+            };
+
+            if (layers[mapLayer]) layers[mapLayer]?.addTo(map);
+            if (isMapLabels && layers.labels) layers.labels.addTo(map);
+
+            const baseMaps = {
+                Satellite: layers.satellite!,
+                Streets: layers.streets!,
+            };
+            const overlayMaps = {
+                Labels: layers.labels!,
+            };
+
+            L.control.layers(baseMaps, overlayMaps, { position: "topright" }).addTo(map);
+            L.control.zoom({ position: "bottomright" }).addTo(map);
+            L.control.scale({ position: "bottomleft" }).addTo(map);
+
+            // Locate Me control
+            L.control
+                .locate({
+                    position: "topright",
+                    drawCircle: true,
+                    follow: true,
+                    setView: true,
+                    keepCurrentZoomLevel: false,
+                    showPopup: false,
+                    strings: { title: "Show my location" },
+                })
+                .addTo(map);
+        });
 
         return () => {
-            map.remove();
+            mapRef.current?.remove();
             mapRef.current = null;
+            document.head.querySelectorAll("link").forEach((link) => link.remove());
+            document.body.querySelectorAll("script").forEach((script) => script.remove());
         };
     }, [
         mapLayer,
@@ -117,7 +146,7 @@ export default function BackgroundMap({
                 height: "100vh",
                 width: "100vw",
                 zIndex: 0,
-                filter: `brightness(${brightness})`, // dynamic brightness
+                filter: `brightness(${brightness})`,
             }}
         />
     );

@@ -14,12 +14,10 @@ export default function Layout() {
             <BackgroundMap />
 
             {/* TOP NAV */}
-            <TopNav
-
-            />
+            {/* <TopNav /> */}
 
             {/* MAIN CONTENT AREA */}
-            <main
+            {/* <main
                 style={{
                     flex: 1,
                     position: "absolute",
@@ -38,10 +36,10 @@ export default function Layout() {
                 <p style={{ color: "white" }}>
                     This is your central workspace.
                 </p>
-            </main>
+            </main> */}
 
             {/* RIGHT CARD */}
-            <aside
+            {/* <aside
                 style={{
                     position: "absolute",
                     maxHeight: "100%",
@@ -76,14 +74,12 @@ export default function Layout() {
                         <ProfileSettingsCard />
                     </div>
                 </ScrollbarWrapper>
-            </aside>
+            </aside> */}
 
             {/* FOOTER */}
-            <Footer
+            {/* <Footer/> */}
 
-            />
-
-            <ButtonContainer />
+            {/* <ButtonContainer /> */}
 
             {/* CSS Media Query */}
             <style>
