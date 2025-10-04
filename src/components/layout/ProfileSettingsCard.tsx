@@ -58,37 +58,37 @@ export default function ProfileSettingsCard() {
                         <label>Map Brightness</label>
                         <input
                             type="range"
-                            min="50"
+                            min="40"
                             max="150"
-                            value={brightness * 100}
-                            onChange={(e) => setBrightness(Number(e.target.value) / 100)}
+                            step="10" // snap in 5% increments
+                            value={Math.round(brightness * 100)}
+                            onChange={(e) => {
+                                const raw = Number(e.target.value);
+                                const quantized = Math.round(raw / 5) * 5; // enforce step
+                                setBrightness(quantized / 100);
+                            }}
                         />
+                        <span>{Math.round(brightness * 100)}%</span>
+
 
                         <label>Sidebar Transparency</label>
                         <input
                             type="range"
-                            min="0"
+                            min="30"
                             max="100"
-                            value={transparency * 100}
-                            onChange={(e) => setTransparency(Number(e.target.value) / 100)}
+                            step="10" // snap in 10% increments
+                            value={Math.round(transparency * 100)}
+                            onChange={(e) => {
+                                const raw = Number(e.target.value);
+                                const quantized = Math.round(raw / 10) * 10;
+                                setTransparency(quantized / 100);
+                            }}
                         />
+                        <span>{Math.round(transparency * 100)}%</span>
+
 
                     </div>
 
-                    {/* Save Button */}
-                    <button
-                        style={{
-                            marginTop: "10px",
-                            padding: "6px 12px",
-                            borderRadius: "6px",
-                            border: "none",
-                            background: "#0d6efd",
-                            color: "white",
-                            cursor: "pointer",
-                        }}
-                    >
-                        Save Settings
-                    </button>
                 </div>
             </section>
         </div>

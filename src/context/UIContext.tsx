@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
 
 interface UIContextType {
     showProfile: boolean;
@@ -15,7 +15,6 @@ interface UIContextType {
 
     logout: () => void;
 
-    // 🔹 New settings
     brightness: number;
     setBrightness: (value: number) => void;
 
@@ -31,9 +30,23 @@ export function UIProvider({ children }: { children: ReactNode }) {
     const [showSettings, setShowSettings] = useState(false);
     const [notifications, setNotifications] = useState<string[]>([]);
 
-    // 🔹 New states
-    const [brightness, setBrightness] = useState(1);   // 1 = normal brightness
-    const [transparency, setTransparency] = useState(0.5); // 0 = fully transparent, 1 = solid
+    const [brightness, setBrightness] = useState(() => {
+        const saved = localStorage.getItem("brightness");
+        return saved ? parseFloat(saved) : 1;
+    });
+
+    const [transparency, setTransparency] = useState(() => {
+        const saved = localStorage.getItem("transparency");
+        return saved ? parseFloat(saved) : 0.5;
+    });
+
+    useEffect(() => {
+        localStorage.setItem("brightness", brightness.toString());
+    }, [brightness]);
+
+    useEffect(() => {
+        localStorage.setItem("transparency", transparency.toString());
+    }, [transparency]);
 
     const addNotification = (message: string) => {
         setNotifications((prev) => [...prev, message]);
@@ -41,7 +54,9 @@ export function UIProvider({ children }: { children: ReactNode }) {
 
     const logout = () => {
         console.log("Logging out…");
-        // clear auth, reset state, etc.
+        // optionally clear settings
+        // localStorage.removeItem("brightness");
+        // localStorage.removeItem("transparency");
     };
 
     return (
