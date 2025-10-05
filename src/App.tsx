@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 // import MapView from "./components/layout/MapView";
-import BackgroundMap from "./features/dashboards/Index";
+import BackgroundMap from "./pages/Index";
 
 export default function App() {
   return (
